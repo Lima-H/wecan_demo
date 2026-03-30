@@ -1,0 +1,80 @@
+# stream.py
+import streamlit as st
+import base64
+import re
+from modelo import processar_pergunta
+
+st.set_page_config(page_title="Chatbot com IA")
+st.title("Chatbot com IA")
+st.caption("Faça perguntas sobre o banco de dados")
+
+
+if "messages" not in st.session_state:
+    st.session_state["messages"] = [{"role": "assistant", "content": "Como posso ajudar você?"}]
+if "processing" not in st.session_state:
+    st.session_state["processing"] = False
+
+def corrigir_formatacao_moeda(texto):  
+    # Corrige padrões como "R25,56" para "R$ 25,56"  
+    texto = re.sub(r'R(\d+,\d+)', r'R$ \1', texto)  
+    # Corrige padrões como "R 64,63" para "R$ 64,63"  
+    texto = re.sub(r'R (\d+,\d+)', r'R$ \1', texto)  
+    return texto  
+
+def exibir_mensagem(content):  
+    if "GRAFICO_BASE64:" in content:  
+        partes = content.split("GRAFICO_BASE64:")  
+        texto = partes[0].strip()  
+          
+        if texto:  
+            texto_corrigido = corrigir_formatacao_moeda(texto)  
+            st.markdown(texto_corrigido, unsafe_allow_html=True)  
+          
+        try:  
+            base64_data = partes[1].strip()  
+            img_data = base64.b64decode(base64_data)  
+            st.image(img_data, use_container_width=True)  
+        except Exception as e:  
+            st.error(f"Erro ao exibir gráfico: {e}")  
+    else:  
+        content_corrigido = corrigir_formatacao_moeda(content)  
+        st.markdown(content_corrigido, unsafe_allow_html=True)
+
+
+# Exibir mensagens do histórico
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        exibir_mensagem(msg["content"])
+
+# Mostrar indicador de processamento se estiver processando
+if st.session_state.processing:
+    with st.chat_message("assistant"):
+        with st.spinner("Analisando os dados..."):
+            st.write("Processando sua pergunta...")
+
+# Input do usuário
+if prompt := st.chat_input("Digite sua pergunta...", disabled=st.session_state.processing):
+    # Marcar como processando
+    st.session_state.processing = True
+    
+    # Adicionar pergunta do usuário ao histórico
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    
+    # Mostrar a pergunta do usuário imediatamente
+    with st.chat_message("user"):
+        st.write(prompt)
+    
+    # Mostrar indicador de processamento
+    with st.chat_message("assistant"):
+        with st.spinner("Processando..."):
+            # Processar resposta
+            resposta = processar_pergunta(prompt)
+    
+    # Adicionar resposta ao histórico
+    st.session_state.messages.append({"role": "assistant", "content": resposta})
+    
+    # Marcar como não processando
+    st.session_state.processing = False
+    
+    # Forçar re-renderização
+    st.rerun()
