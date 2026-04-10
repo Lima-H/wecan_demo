@@ -2,9 +2,10 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from modelo import processar_pergunta
+from modelo import processar_pergunta, ultimo_pdf_base64
 import base64
 import re
+import uuid
 
 # =============================
 # Chatbot - funções auxiliares
@@ -16,15 +17,27 @@ def corrigir_formatacao_moeda(texto):
     return texto  
 
 def exibir_mensagem(content):  
-    if "GRAFICO_BASE64:" in content:  
-        partes = content.split("GRAFICO_BASE64:")  
-        texto = partes[0].strip()  
+
+    # 🔥 NOVO: detectar PDF via flag
+    pdf_base64 = None
+
+    # ✅ detectar PDF corretamente
+    if "PDF_BASE64:" in content:
+        partes = content.split("PDF_BASE64:")
+        texto = partes[0].strip()
+        pdf_base64 = partes[1].strip()
+
+    elif "GRAFICO_BASE64:" in content:
+        partes = content.split("GRAFICO_BASE64:")
+        texto = partes[0].strip()
+
     else:
         texto = content.strip()
 
-    # 🔥 NOVO: detectar lista de candidatos
+
     linhas = texto.split("\n")
-    
+
+
     if all("|" in l for l in linhas if l.strip()):
         st.markdown("### 👥 Resultados encontrados")
         
@@ -53,6 +66,17 @@ def exibir_mensagem(content):
     content_corrigido = corrigir_formatacao_moeda(texto)
     st.markdown(content_corrigido, unsafe_allow_html=True)
 
+    if pdf_base64:
+        pdf_bytes = base64.b64decode(pdf_base64)
+
+        st.download_button(
+            label="📄 Baixar PDF completo",
+            data=pdf_bytes,
+            file_name="colaboradores.pdf",
+            mime="application/pdf",
+            key=f"download_pdf_{uuid.uuid4()}"  # 🔥 chave única
+        )
+        return
 
 
 # =============================

@@ -18,12 +18,20 @@ from langchain_community.callbacks import get_openai_callback
 from dotenv import load_dotenv
 from pathlib import Path
 from rapidfuzz import process,  fuzz
-
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph
+from reportlab.lib import colors
+import unicodedata
+import re
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import mm
 
 
 
 ultimo_grafico_base64 = None # Guarda imagem
 # api_key = st.secrets["OPENAI_API_KEY"]
+ultimo_pdf_base64 = None
 
 # --- CONFIGURAÇÃO INICIAL ---
 
@@ -83,14 +91,14 @@ def query_dataframe(query: str) -> str:
         else:
             result = eval(query, {}, safe_env)
 
-        # 🔥 CORREÇÃO PRINCIPAL: se vier máscara booleana, vira DataFrame
+        # CORREÇÃO PRINCIPAL: se vier máscara booleana, vira DataFrame
         if isinstance(result, pd.Series) and result.dtype == bool:
             result = df_preparado[result]
 
         if result is None:
             return "Operação executada (sem retorno)"
 
-        # 🔥 Ordenação segura (se tiver coluna meses)
+        # Ordenação segura (se tiver coluna meses)
         if isinstance(result, pd.DataFrame) and 'meses' in result.columns:
             result = result.sort_values(by='meses', ascending=False)
 
@@ -206,8 +214,6 @@ def buscar_cargos_similares(cargo_input: str) -> str:
 
 
 #### novas tolss ######
-import unicodedata
-import re
 
 def normalizar_texto(texto):
     if pd.isna(texto):
@@ -252,6 +258,76 @@ def preparar_dataframe(df):
 
     return df_copy
 
+
+
+def gerar_pdf_colaboradores(df_filtrado):
+    buffer = BytesIO()
+
+    # Página A4 com margens
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        leftMargin=10*mm,
+        rightMargin=10*mm,
+        topMargin=10*mm,
+        bottomMargin=10*mm
+    )
+
+    styles = getSampleStyleSheet()
+    styleN = ParagraphStyle(
+    name='NormalSmall',
+    fontSize=6,     # 🔥 aqui está o segredo
+    leading=7       # espaçamento entre linhas
+    )
+
+    
+    data = []
+
+    # Cabeçalho
+    header = [Paragraph(str(col), styleN) for col in df_filtrado.columns]
+    data.append(header)
+
+    # Linhas
+    for _, row in df_filtrado.iterrows():
+        linha = [Paragraph(str(cell), styleN) for cell in row]
+        data.append(linha)
+
+  
+    num_cols = len(df_filtrado.columns)
+    largura_total = A4[0] - 20*mm  # largura útil (menos margens)
+    col_width = largura_total / num_cols
+
+    col_widths = [col_width] * num_cols
+
+    tabela = Table(data, colWidths=col_widths, repeatRows=1)
+
+    tabela.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.grey),
+        ('TEXTCOLOR',(0,0),(-1,0),colors.white),
+
+        ('GRID', (0,0), (-1,-1), 0.5, colors.black),
+
+        ('FONTSIZE', (0,0), (-1,-1), 5),
+
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+
+        ('LEFTPADDING', (0,0), (-1,-1), 4),
+        ('RIGHTPADDING', (0,0), (-1,-1), 4),
+        ('TOPPADDING', (0,0), (-1,-1), 2),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 2),
+    ]))
+
+    doc.build([tabela])
+
+    buffer.seek(0)
+
+    pdf_base64 = base64.b64encode(buffer.read()).decode()
+
+    return pdf_base64
+
+
+
+
 def buscar_colaboradores(filtro: str) -> str:
     try:
         df_copy = preparar_dataframe(df)
@@ -264,7 +340,6 @@ def buscar_colaboradores(filtro: str) -> str:
 
         result = eval(filtro, {}, safe_env)
 
-        # 🔥 CORREÇÃO: se for máscara booleana → aplicar no df
         if isinstance(result, pd.Series) and result.dtype == bool:
             df_filtrado = df_copy[result]
         else:
@@ -273,11 +348,19 @@ def buscar_colaboradores(filtro: str) -> str:
         if df_filtrado.empty:
             return "Nenhum colaborador encontrado."
 
-        # 🔥 agora sim é DataFrame garantido
         if 'meses' in df_filtrado.columns:
             df_filtrado = df_filtrado.sort_values(by='meses', ascending=False)
 
+        
+
+        if len(df_filtrado) > 10:
+            global ultimo_pdf_base64
+            ultimo_pdf_base64 = gerar_pdf_colaboradores(df_filtrado)
+            return f"Foram encontrados {len(df_filtrado)} colaboradores. Clique abaixo para baixar o PDF."
+
+
         top = df_filtrado.head(10)
+
 
         resposta = []
         for _, row in top.iterrows():
@@ -581,6 +664,10 @@ def processar_pergunta(pergunta: str, chat_history: list = None) -> str:
     """
     global ultimo_grafico_base64
     ultimo_grafico_base64 = None  # IMPORTANTE: Limpar antes de processar
+
+    global ultimo_pdf_base64
+    ultimo_pdf_base64 = None
+
     
     entrada = {"input": pergunta}
     if chat_history:
@@ -625,8 +712,13 @@ def processar_pergunta(pergunta: str, chat_history: list = None) -> str:
             resposta_para_usuario += f"\nGRAFICO_BASE64:{ultimo_grafico_base64}"
             ultimo_grafico_base64 = None  # Limpar após usar
 
+        if ultimo_pdf_base64:
+            resposta_para_usuario += f"\nPDF_BASE64:{ultimo_pdf_base64}"
+            ultimo_pdf_base64 = None
+
     except Exception as e:
         ultimo_grafico_base64 = None  # Limpar em caso de erro também
+        ultimo_pdf_base64 = None
         # Guarda erro
         log_data.update({
             "status": "erro",
