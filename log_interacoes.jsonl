@@ -2232,3 +2232,213 @@
     }
   ]
 }
+{
+  "timestamp": "2026-05-04T17:30:37.849395",
+  "pergunta_usuario": "Me indica cozinheiros",
+  "historico_usado": [],
+  "status": "sucesso",
+  "resposta_final_agente": "Encontrei 3 cozinheiros atualmente na empresa. Deseja que eu envie a lista completa com os nomes e contatos?",
+  "passos_intermediarios": [
+    {
+      "ferramenta": "buscar_cargos_similares",
+      "input_ferramenta": "cozinheiro",
+      "log_agente": "\nInvoking: `buscar_cargos_similares` with `cozinheiro`\n\n\n",
+      "output_ferramenta": "CARGO_CONFIRMADO:cozinheiro"
+    },
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "df[df['Descricao'] == 'cozinheiro']",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `df[df['Descricao'] == 'cozinheiro']`\n\n\n",
+      "output_ferramenta": "FERNANDA CONSUELO DOS SANTOS | 2 meses | SAPORE SA | 62996095243\nCARLOS ANDRE SILVA SANTOS | 2 meses | SAPORE SA | 11945084834\nANA RITA FERREIRA DA SILVA | 1 meses | SAPORE SA | 62999785336\n\n(3 colaborador(es) — PDF disponível para download)"
+    }
+  ]
+}
+{
+  "timestamp": "2026-05-04T17:31:05.822865",
+  "pergunta_usuario": "Sim",
+  "historico_usado": [],
+  "status": "sucesso",
+  "resposta_final_agente": "Aqui está a lista dos cozinheiros atualmente na empresa:\n\n1. FERNANDA CONSUELO DOS SANTOS - 2 meses - SAPORE SA - Celular: 62996095243\n2. CARLOS ANDRE SILVA SANTOS - 2 meses - SAPORE SA - Celular: 11945084834\n3. ANA RITA FERREIRA DA SILVA - 1 mês - SAPORE SA - Celular: 62999785336\n\nSe precisar de mais alguma informação, estou à disposição!",
+  "passos_intermediarios": [
+    {
+      "ferramenta": "buscar_cargos_similares",
+      "input_ferramenta": "cozinheiro",
+      "log_agente": "\nInvoking: `buscar_cargos_similares` with `cozinheiro`\n\n\n",
+      "output_ferramenta": "CARGO_CONFIRMADO:cozinheiro"
+    },
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "df[df['Descricao'] == 'cozinheiro']",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `df[df['Descricao'] == 'cozinheiro']`\n\n\n",
+      "output_ferramenta": "FERNANDA CONSUELO DOS SANTOS | 2 meses | SAPORE SA | 62996095243\nCARLOS ANDRE SILVA SANTOS | 2 meses | SAPORE SA | 11945084834\nANA RITA FERREIRA DA SILVA | 1 meses | SAPORE SA | 62999785336\n\n(3 colaborador(es) — PDF disponível para download)"
+    }
+  ]
+}
+{
+  "timestamp": "2026-05-04T17:31:44.265707",
+  "pergunta_usuario": " me da uma indicação de analista comercial",
+  "historico_usado": [],
+  "status": "sucesso",
+  "resposta_final_agente": "Encontrei múltiplos cargos similares:\n- analista comercial jr\n- analista comercial sr\n- analista contabil\n- assistente comercial\n\nQual deles você deseja usar?",
+  "passos_intermediarios": [
+    {
+      "ferramenta": "buscar_cargos_similares",
+      "input_ferramenta": "analista comercial",
+      "log_agente": "\nInvoking: `buscar_cargos_similares` with `analista comercial`\n\n\n",
+      "output_ferramenta": "CARGOS_MULTIPLOS:\nanalista comercial jr\nanalista comercial sr\nanalista contabil\nassistente comercial"
+    }
+  ]
+}
+{
+  "timestamp": "2026-05-04T17:31:55.300684",
+  "pergunta_usuario": "analista comercial jr",
+  "historico_usado": [],
+  "status": "sucesso",
+  "resposta_final_agente": "Aqui estão as indicações de analistas comerciais jr atualmente na empresa:\n\n1. Eden Nascimento da Silva - 6 meses - SAPORE SA - Celular: 19992931919\n2. Maisa Voigt - 5 meses - SAPORE SA - Celular: 19996938800\n3. Mariana Cuinas - 4 meses - SAPORE SA - Celular: 19998312458\n\nSe desejar, posso gerar um PDF com essas informações ou ajudar com mais alguma coisa.",
+  "passos_intermediarios": [
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "df[(df['Descricao'] == 'analista comercial jr')]",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `df[(df['Descricao'] == 'analista comercial jr')]`\n\n\n",
+      "output_ferramenta": "EDEN NASCIMENTO DA SILVA | 6 meses | SAPORE SA | 19992931919\nMAISA VOIGT | 5 meses | SAPORE SA | 19996938800\nMARIANA CUINAS | 4 meses | SAPORE SA | 19998312458\n\n(3 colaborador(es) — PDF disponível para download)"
+    }
+  ]
+}
+{
+  "timestamp": "2026-05-04T17:38:24.826597",
+  "pergunta_usuario": "Me indica cozinheiros",
+  "historico_usado": [],
+  "status": "sucesso",
+  "resposta_final_agente": "Encontrei 3 cozinheiros atualmente na empresa. Deseja que eu envie a lista completa com os nomes, tempo de empresa e empresa onde trabalham?",
+  "passos_intermediarios": [
+    {
+      "ferramenta": "buscar_cargos_similares",
+      "input_ferramenta": "cozinheiro",
+      "log_agente": "\nInvoking: `buscar_cargos_similares` with `cozinheiro`\n\n\n",
+      "output_ferramenta": "CARGO_CONFIRMADO:cozinheiro"
+    },
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "df[df['Descricao'] == 'cozinheiro']",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `df[df['Descricao'] == 'cozinheiro']`\n\n\n",
+      "output_ferramenta": "FERNANDA CONSUELO DOS SANTOS | 2 meses | SAPORE SA | 62996095243\nCARLOS ANDRE SILVA SANTOS | 2 meses | SAPORE SA | 11945084834\nANA RITA FERREIRA DA SILVA | 1 meses | SAPORE SA | 62999785336\n\n(3 colaborador(es) — PDF disponível para download)"
+    }
+  ]
+}
+{
+  "timestamp": "2026-05-04T17:38:44.080129",
+  "pergunta_usuario": "Me indica cozinheiros com 3 meses de permanencia minima",
+  "historico_usado": [],
+  "status": "sucesso",
+  "resposta_final_agente": "Não encontrei cozinheiros com pelo menos 3 meses de permanência na empresa. Deseja que eu busque com outro tempo mínimo ou outro filtro?",
+  "passos_intermediarios": [
+    {
+      "ferramenta": "buscar_cargos_similares",
+      "input_ferramenta": "cozinheiro",
+      "log_agente": "\nInvoking: `buscar_cargos_similares` with `cozinheiro`\n\n\n",
+      "output_ferramenta": "CARGO_CONFIRMADO:cozinheiro"
+    },
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "df[(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 3)]",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `df[(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 3)]`\n\n\n",
+      "output_ferramenta": "Nenhum colaborador encontrado."
+    }
+  ]
+}
+{
+  "timestamp": "2026-05-04T17:39:26.953731",
+  "pergunta_usuario": "me indica cozinheiros com 2 meses de permanencia minima",
+  "historico_usado": [],
+  "status": "sucesso",
+  "resposta_final_agente": "Encontrei 2 cozinheiros com pelo menos 2 meses de permanência na empresa:\n\n- FERNANDA CONSUELO DOS SANTOS, 2 meses, SAPORE SA\n- CARLOS ANDRE SILVA SANTOS, 2 meses, SAPORE SA\n\nDeseja que eu envie a lista completa com contatos ou outro detalhe?",
+  "passos_intermediarios": [
+    {
+      "ferramenta": "buscar_cargos_similares",
+      "input_ferramenta": "cozinheiro",
+      "log_agente": "\nInvoking: `buscar_cargos_similares` with `cozinheiro`\n\n\n",
+      "output_ferramenta": "CARGO_CONFIRMADO:cozinheiro"
+    },
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 2)",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 2)`\n\n\n",
+      "output_ferramenta": "FERNANDA CONSUELO DOS SANTOS | 2 meses | SAPORE SA | 62996095243\nCARLOS ANDRE SILVA SANTOS | 2 meses | SAPORE SA | 11945084834\n\n(2 colaborador(es) — PDF disponível para download)"
+    }
+  ]
+}
+{
+  "timestamp": "2026-05-04T17:49:48.968886",
+  "pergunta_usuario": "cozinheiro com pelo menos 2 meses de permanencia",
+  "historico_usado": [],
+  "status": "sucesso",
+  "resposta_final_agente": "Parece que há um problema técnico com a consulta para cozinheiros com pelo menos 2 meses de permanência. Por favor, tente reformular sua solicitação ou me informe se deseja outro tipo de filtro.",
+  "passos_intermediarios": [
+    {
+      "ferramenta": "buscar_cargos_similares",
+      "input_ferramenta": "cozinheiro",
+      "log_agente": "\nInvoking: `buscar_cargos_similares` with `cozinheiro`\n\n\n",
+      "output_ferramenta": "CARGO_CONFIRMADO:cozinheiro"
+    },
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "df[(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 2)]",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `df[(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 2)]`\n\n\n",
+      "output_ferramenta": "ERRO: name 'relativedelta' is not defined"
+    },
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "df[(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 2)]",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `df[(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 2)]`\nresponded: Parece que houve um erro na consulta. Vou corrigir e tentar novamente.\n\n",
+      "output_ferramenta": "ERRO: name 'relativedelta' is not defined"
+    },
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "df[(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 2)]",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `df[(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 2)]`\nresponded: Houve um problema técnico ao tentar buscar os cozinheiros com pelo menos 2 meses de permanência. Vou tentar uma abordagem alternativa para realizar essa busca.\n\n",
+      "output_ferramenta": "ERRO: name 'relativedelta' is not defined"
+    }
+  ]
+}
+{
+  "timestamp": "2026-05-04T17:51:13.065419",
+  "pergunta_usuario": "cozinheiro com pelo menos 2 meses de permanencia",
+  "historico_usado": [],
+  "status": "sucesso",
+  "resposta_final_agente": "Encontrei 1 cozinheiro com pelo menos 2 meses de permanência na empresa. Deseja que eu envie os detalhes ou faça alguma outra consulta?",
+  "passos_intermediarios": [
+    {
+      "ferramenta": "buscar_cargos_similares",
+      "input_ferramenta": "cozinheiro",
+      "log_agente": "\nInvoking: `buscar_cargos_similares` with `cozinheiro`\n\n\n",
+      "output_ferramenta": "CARGO_CONFIRMADO:cozinheiro"
+    },
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "df[(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 2)]",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `df[(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 2)]`\n\n\n",
+      "output_ferramenta": "CARLOS ANDRE SILVA SANTOS | 2 meses | SAPORE SA | 11945084834\n\n(1 colaborador(es) — PDF disponível para download)"
+    }
+  ]
+}
+{
+  "timestamp": "2026-05-04T17:51:30.040729",
+  "pergunta_usuario": "e com pelo menos 1 mes? liste para mim",
+  "historico_usado": [],
+  "status": "sucesso",
+  "resposta_final_agente": "Encontrei 2 cozinheiros com pelo menos 1 mês de permanência na empresa:\n\n- Carlos Andre Silva Santos, 2 meses, empresa SAPORE SA\n- Fernanda Consuelo dos Santos, 1 mês, empresa SAPORE SA\n\nSe desejar, posso fornecer mais informações ou exportar a lista.",
+  "passos_intermediarios": [
+    {
+      "ferramenta": "buscar_cargos_similares",
+      "input_ferramenta": "cozinheiro",
+      "log_agente": "\nInvoking: `buscar_cargos_similares` with `cozinheiro`\n\n\n",
+      "output_ferramenta": "CARGO_CONFIRMADO:cozinheiro"
+    },
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "df[(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 1)]",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `df[(df['Descricao'] == 'cozinheiro') & (df['meses'] >= 1)]`\n\n\n",
+      "output_ferramenta": "CARLOS ANDRE SILVA SANTOS | 2 meses | SAPORE SA | 11945084834\nFERNANDA CONSUELO DOS SANTOS | 1 meses | SAPORE SA | 62996095243\n\n(2 colaborador(es) — PDF disponível para download)"
+    }
+  ]
+}

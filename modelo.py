@@ -26,6 +26,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import mm
+from dateutil.relativedelta import relativedelta
 
 
 
@@ -195,8 +196,13 @@ def buscar_cargos_similares(cargo_input: str) -> str:
         .unique()
     )
 
+    # se o input for exatamente igual a um cargo do banco, confirmar direto...
+    cargo_normalizado = cargo_input.strip().lower()
+    if cargo_normalizado in cargos_unicos:
+        return f"CARGO_CONFIRMADO:{cargo_normalizado}"
+
     resultados = process.extract(
-        cargo_input.lower(),
+        cargo_normalizado,
         cargos_unicos,
         scorer=fuzz.token_set_ratio,
         limit=5
@@ -244,18 +250,22 @@ def preparar_dataframe(df):
     df_copy['DataDemissao'] = pd.to_datetime(df_copy['DataDemissao'], errors='coerce')
 
     hoje = pd.Timestamp.now()
-    df_copy['fim'] = df_copy['DataDemissao'].fillna(hoje)
-
-    df_copy['meses'] = (
-        (df_copy['fim'].dt.year - df_copy['DataAdmissao'].dt.year) * 12 +
-        (df_copy['fim'].dt.month - df_copy['DataAdmissao'].dt.month)
-    )
-
+    def _meses_relativedelta(row):
+        inicio = row['DataAdmissao']
+        fim    = row['DataDemissao'] if pd.notna(row['DataDemissao']) else hoje
+        if pd.isna(inicio):
+            return 0
+        delta = relativedelta(fim, inicio)
+        return delta.years * 12 + delta.months
+ 
+    df_copy['meses'] = df_copy.apply(_meses_relativedelta, axis=1)
+ 
+    
     df_copy['meses_desde_saida'] = (
-        (hoje.year - df_copy['DataDemissao'].dt.year) * 12 +
+        (hoje.year  - df_copy['DataDemissao'].dt.year)  * 12 +
         (hoje.month - df_copy['DataDemissao'].dt.month)
     )
-
+ 
     return df_copy
 
 
@@ -327,7 +337,6 @@ def gerar_pdf_colaboradores(df_filtrado):
 
 
 
-
 def buscar_colaboradores(filtro: str) -> str:
     try:
         df_copy = preparar_dataframe(df)
@@ -351,28 +360,25 @@ def buscar_colaboradores(filtro: str) -> str:
         if 'meses' in df_filtrado.columns:
             df_filtrado = df_filtrado.sort_values(by='meses', ascending=False)
 
-        
+        # ✅ SEMPRE gerar o PDF, independente da quantidade
+        global ultimo_pdf_base64
+        ultimo_pdf_base64 = gerar_pdf_colaboradores(df_filtrado)
 
         if len(df_filtrado) > 10:
-            global ultimo_pdf_base64
-            ultimo_pdf_base64 = gerar_pdf_colaboradores(df_filtrado)
-            return f"Foram encontrados {len(df_filtrado)} colaboradores. Clique abaixo para baixar o PDF."
+            return f"Foram encontrados {len(df_filtrado)} colaboradores. PDF disponível para download."
 
-
+        # ≤10: mostrar no chat E PDF disponível
         top = df_filtrado.head(10)
-
-
         resposta = []
         for _, row in top.iterrows():
             resposta.append(
                 f"{row['Nome']} | {row['meses']} meses | {row['RazaoSocial']} | {row['Celular']}"
             )
 
-        return "\n".join(resposta)
+        return "\n".join(resposta) + f"\n\n({len(df_filtrado)} colaborador(es) — PDF disponível para download)"
 
     except Exception as e:
         return f"ERRO: {str(e)}"
-
 
 
 def metricas_rh(query: str) -> str:
