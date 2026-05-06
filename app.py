@@ -6,6 +6,10 @@ from modelo import processar_pergunta, ultimo_pdf_base64
 import base64
 import re
 import uuid
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+caminho = os.path.join(BASE_DIR, "dados", "sapore_funcionario.xlsx")
 
 # =============================
 # Chatbot - funções auxiliares
@@ -344,7 +348,7 @@ dicionario_colunas = {
 
 @st.cache_data
 def load_data():
-    df = pd.read_excel("dados/sapore_funcionario.xlsx")
+    df = pd.read_excel(caminho)
     df.rename(columns=dicionario_colunas, inplace=True)
     df.columns = df.columns.str.lower().str.strip()
     df["data_admissao"] = pd.to_datetime(df["data_admissao"])
@@ -414,7 +418,7 @@ df_filtrado = df[
 
 if ultimos_anos > 0:
     limite_data = datetime.today() - relativedelta(years=ultimos_anos)
-    df_filtrado = df_filtrado[df_filtrado["data_demissao"] >= limite_data]
+    df_filtrado = df_filtrado[(df_filtrado["data_demissao"] >= limite_data) | (df_filtrado["data_demissao"].isna())]
 
 # =============================
 # Resultado

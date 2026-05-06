@@ -27,7 +27,10 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import mm
 from dateutil.relativedelta import relativedelta
+import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+caminho = os.path.join(BASE_DIR, "dados", "sapore_funcionario.xlsx")
 
 
 ultimo_grafico_base64 = None # Guarda imagem
@@ -46,7 +49,7 @@ LOG_FILE = "log_interacoes.jsonl"
 
 # Carregar DataFrame
 try:
-    df = pd.read_excel("dados\sapore_funcionario.xlsx")  
+    df = pd.read_excel(caminho)
     #df_remedios = pd.read_csv("data/BASE RBG - POC(PRODUTOS).csv")  
     # df_exemplo = df.head(3).to_string()
     # df_remedio_exemplo = df_remedios.head(3).to_string()

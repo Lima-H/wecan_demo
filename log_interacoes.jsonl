@@ -2442,3 +2442,45 @@
     }
   ]
 }
+{
+  "timestamp": "2026-05-06T16:56:36.905003",
+  "pergunta_usuario": "Estou buscando analistas administrativos que tenham ficado na empresa ao menos dois meses",
+  "historico_usado": [],
+  "status": "sucesso",
+  "resposta_final_agente": "Encontrei 1 analista administrativo que ficou na empresa ao menos 2 meses:\n\n- FABIANA DA SILVA GABRIEL, 5 meses, empresa SAPORE SA.\n\nSe desejar, posso fornecer mais informações ou listar outros colaboradores.",
+  "passos_intermediarios": [
+    {
+      "ferramenta": "buscar_cargos_similares",
+      "input_ferramenta": "analista administrativo",
+      "log_agente": "\nInvoking: `buscar_cargos_similares` with `analista administrativo`\n\n\n",
+      "output_ferramenta": "CARGO_CONFIRMADO:analista administrativo"
+    },
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "df[(df['Descricao'] == 'analista administrativo') & (df['meses'] >= 2)]",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `df[(df['Descricao'] == 'analista administrativo') & (df['meses'] >= 2)]`\n\n\n",
+      "output_ferramenta": "FABIANA DA SILVA GABRIEL | 5 meses | SAPORE SA | 11959378061\n\n(1 colaborador(es) — PDF disponível para download)"
+    }
+  ]
+}
+{
+  "timestamp": "2026-05-06T16:57:42.542422",
+  "pergunta_usuario": "E operador de caixa, com no mínimo 1 mês de experiência?",
+  "historico_usado": [],
+  "status": "sucesso",
+  "resposta_final_agente": "Encontrei 30 operadores de caixa com no mínimo 1 mês de experiência na empresa. Se desejar, posso listar os nomes ou fornecer mais detalhes.",
+  "passos_intermediarios": [
+    {
+      "ferramenta": "buscar_cargos_similares",
+      "input_ferramenta": "operador de caixa",
+      "log_agente": "\nInvoking: `buscar_cargos_similares` with `operador de caixa`\n\n\n",
+      "output_ferramenta": "CARGO_CONFIRMADO:operador de caixa"
+    },
+    {
+      "ferramenta": "buscar_colaboradores",
+      "input_ferramenta": "(df['Descricao'] == 'operador de caixa') & (df['meses'] >= 1)",
+      "log_agente": "\nInvoking: `buscar_colaboradores` with `(df['Descricao'] == 'operador de caixa') & (df['meses'] >= 1)`\n\n\n",
+      "output_ferramenta": "Foram encontrados 30 colaboradores. PDF disponível para download."
+    }
+  ]
+}
