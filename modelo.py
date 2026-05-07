@@ -40,8 +40,11 @@ ultimo_pdf_base64 = None
 # --- CONFIGURAÇÃO INICIAL ---
 
 # Carregar variáveis de ambiente
-load_dotenv()
-api_key = os.getenv("OPENAI_API_KEY")
+# dotenv_path = Path(__file__).resolve().parent / '.env'
+# load_dotenv(dotenv_path)
+# load_dotenv()
+# api_key = os.getenv("api_key")
+api_key = st.secrets["api_key"]
 
 # Arquivo json
 LOG_FILE = "log_interacoes.jsonl"
