@@ -40,8 +40,7 @@ ultimo_pdf_base64 = None
 # --- CONFIGURAÇÃO INICIAL ---
 
 # Carregar variáveis de ambiente
-dotenv_path = Path(__file__).resolve().parent / '.env'
-load_dotenv(dotenv_path)
+load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
 # Arquivo json
